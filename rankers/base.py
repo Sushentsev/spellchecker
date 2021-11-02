@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Iterator, Optional
+from typing import List, Optional
 
 from dataset import DatasetEntry
 from features.base import Feature
@@ -14,5 +14,5 @@ class CandidatesRanker(ABC):
             val_dataset: Optional[List[DatasetEntry]] = None) -> "CandidatesRanker":
         raise NotImplementedError
 
-    def rank(self, misspelled: str, candidates: Iterator[str]) -> List[str]:
+    def rank(self, misspelled: str, candidates: List[str]) -> List[str]:
         raise NotImplementedError

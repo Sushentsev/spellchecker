@@ -11,14 +11,8 @@ from metrics import acc_k, mrr
 from spell_checker import SpellChecker
 
 
-def log_metrics(y_true: List[str], y_pred: List[List[str]]):
-    for k in [1, 5, 10]:
-        print(f"Acc@{k}: {acc_k(y_true, y_pred, k):.2f}")
-
-    print(f"MRR: {mrr(y_true, y_pred):.2f}")
-
-
 def train(spell_checker: SpellChecker, data_path: str):
+    print("Fitting...")
     with open(os.path.join(data_path, "train/train_5k.json")) as file:
         data = json.load(file)
 
@@ -35,8 +29,15 @@ def train(spell_checker: SpellChecker, data_path: str):
     print(f"Fitted.")
 
 
+def log_metrics(y_true: List[str], y_pred: List[List[str]]):
+    for k in [1, 5, 10]:
+        print(f"Acc@{k}: {acc_k(y_true, y_pred, k):.2f}")
+
+    print(f"MRR: {mrr(y_true, y_pred):.2f}")
+
+
 def eval(spell_checker: SpellChecker, data_path: str):
-    test_df = pd.read_csv("./data/test.tsv", sep="\t")
+    test_df = pd.read_csv(os.path.join(data_path, "test.tsv"), sep="\t")
     y_pred = []
 
     for _, row in tqdm(test_df.iterrows(), total=len(test_df)):
@@ -46,7 +47,7 @@ def eval(spell_checker: SpellChecker, data_path: str):
 
 
 def main(data_path: str, ranker_type: str):
-    spell_checker = SpellChecker.from_files("en_US", "./data/features_data", ranker_type=ranker_type)
+    spell_checker = SpellChecker.from_files("en_US", os.path.join(data_path, "features_data"), ranker_type=ranker_type)
     train(spell_checker, data_path)
     eval(spell_checker, data_path)
 
@@ -54,7 +55,7 @@ def main(data_path: str, ranker_type: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="SpellChecker")
     parser.add_argument("--data_path", type=str, default="data")
-    parser.add_argument("--ranker_type", type=str, default="boosting")
+    parser.add_argument("--ranker_type", type=str, default="basic")
     args = parser.parse_args()
 
     main(args.data_path, args.ranker_type)

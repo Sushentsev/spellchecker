@@ -1,4 +1,4 @@
-from typing import List, Iterator, Optional
+from typing import List, Optional
 
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
@@ -23,16 +23,10 @@ class BasicRanker(CandidatesRanker):
 
         return self._scaler.fit_transform(features)
 
-    def rank(self, misspelled: str, candidates: Iterator[str]) -> List[str]:
-        candidates = np.array(list(candidates))
-
-        if len(candidates) == 0:
-            return []
-
-        features = []
-        for candidate in candidates:
-            features.append([feature(misspelled, candidate) for feature in self._features])
+    def rank(self, misspelled: str, candidates: List[str]) -> List[str]:
+        features = [[feature(misspelled, candidate) for feature in self._features]
+                    for candidate in candidates]
 
         features = self._normalize(features)
         scores = np.mean(features, axis=1)
-        return list(candidates[np.argsort(-scores)])
+        return list(np.array(candidates)[np.argsort(-scores)])

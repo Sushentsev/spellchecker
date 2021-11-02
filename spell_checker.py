@@ -20,7 +20,11 @@ class SpellChecker:
         return self
 
     def ranked_candidates(self, word: str) -> List[str]:
-        candidates = self._dictionary.suggester.ngram_suggestions(word, set())
+        candidates = list(self._dictionary.suggester.ngram_suggestions(word, set()))
+
+        if len(candidates) == 0:
+            return []
+
         ranked_candidates = self._candidates_ranker.rank(word, candidates)
         return ranked_candidates[:self._suggestions]
 

@@ -1,4 +1,4 @@
-from typing import List, Iterator, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 from catboost import CatBoostRanker, Pool
@@ -27,7 +27,7 @@ class BoostingRanker(CandidatesRanker):
     def _create_pool(self, queries: List[str], docs: List[List[str]], labels: Optional[List[str]] = None) -> Pool:
         X, queries_pool, labels_pool = [], [], []
 
-        for query_id in tqdm(range(len(queries)), "Creating pool"):
+        for query_id in range(len(queries)):
             for doc_id in range(len(docs[query_id])):
                 queries_pool.append(query_id + 1)
                 features = [feature(queries[query_id], docs[query_id][doc_id]) for feature in self._features]
@@ -60,12 +60,7 @@ class BoostingRanker(CandidatesRanker):
 
         return self
 
-    def rank(self, misspelled: str, candidates: Iterator[str]) -> List[str]:
-        candidates = list(candidates)
-
-        if len(candidates) == 0:
-            return []
-
+    def rank(self, misspelled: str, candidates: List[str]) -> List[str]:
         pool = self._create_pool([misspelled], [candidates])
         scores = self._ranker.predict(pool)
         return list(np.array(candidates)[np.argsort(-scores)])
