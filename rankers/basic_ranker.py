@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 from dataset import DatasetEntry
 from features.base import Feature
-from scorers.base import CandidatesRanker
+from rankers.base import CandidatesRanker
 
 
 class BasicRanker(CandidatesRanker):

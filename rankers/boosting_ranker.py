@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from dataset import DatasetEntry
 from features.base import Feature
-from scorers.base import CandidatesRanker
+from rankers.base import CandidatesRanker
 
 
 def convert(dataset: List[DatasetEntry]) -> Tuple[List[str], List[List[str]], List[str]]:

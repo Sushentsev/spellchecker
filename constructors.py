@@ -7,9 +7,9 @@ from features.keyboard_dist_feature import KeyboardDistFeature
 from features.length_dist_feature import LengthDistFeature
 from features.n_gram_overlap_feature import NGramOverlapFeature
 from features.phonetic_dist_feature import PhoneticDistFeature
-from scorers.base import CandidatesRanker
-from scorers.basic_ranker import BasicRanker
-from scorers.boosting_ranker import BoostingRanker
+from rankers.base import CandidatesRanker
+from rankers.basic_ranker import BasicRanker
+from rankers.boosting_ranker import BoostingRanker
 
 features_list = [
     EditDistFeature, FreqFeature, KeyboardDistFeature, LengthDistFeature,
@@ -27,4 +27,4 @@ def ranker_ctor(features: List[Feature], scorer_type: str) -> CandidatesRanker:
     elif scorer_type == "boosting":
         return BoostingRanker(features)
     else:
-        raise ValueError("Invalid ranker_type type.")
+        raise ValueError("Invalid ranker type.")
